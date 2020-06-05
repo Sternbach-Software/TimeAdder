@@ -17,6 +17,7 @@ object MainV1FullyFunctional_UsesInts {
     var sss = "s-?[0-9]+" //such as "s25"
     var ss = "-?[0-9]+?" //only to be used in Second Mode(1)
 
+
     //TODO add MainScreen GUI with radio buttons for each mode
     //TODO add adder gui
     //TODO add start and end time gui with one slot for each

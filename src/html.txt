@@ -1,0 +1,152 @@
+{
+
+                    if (Pattern.matches(regex, element)) {
+                        //tree of destructuring decision based on time format:
+                        if (regex == hhCmmCss) { //if in hh:mm:ss format
+                            val times = element.split(":".toRegex()).toTypedArray()
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                times[0].toInt(),
+                                times[1].toInt(),
+                                times[2].toInt()
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == hhCmm && mode == 4) { //if in h:mm format
+                            //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds. I am assuming it is 0
+                            val times = element.split(":".toRegex()).toTypedArray()
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                times[0].toInt(),
+                                times[1].toInt(),
+                                0
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == mmCss && mode == 3) { //if in mm:ss format
+                            val times = element.split(":".toRegex()).toTypedArray()
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                times[0].toInt(),
+                                times[1].toInt()
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == mmm) { //if in mmm(e.g. m42) format
+                            //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds
+                            element = element.substring(1)
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                element.toInt(),
+                                0
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == hhh) {
+                            element = element.substring(1)
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                element.toInt(),
+                                0,
+                                0
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == sss) {
+                            element = element.substring(1)
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                0,
+                                element.toInt()
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == mm && mode == 2) {
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                element.toInt(),
+                                0
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        } else if (regex == ss && mode == 1) {
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                0,
+                                element.toInt()
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                        }
+                    }
+                    else {
+                        if (!(element == "total" || element == "done" || element == "redo" || element == "main" || element == "excel")) {
+                            println("Incorrectly Formatted Number. Try Again.")
+                            print("Time$inputNumber: ")
+                            element = getInput()
+                            continue
+                        } else if (element == "done") break
+                        else if (element == "total") {
+                            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                                hour,
+                                minute,
+                                second,
+                                0,
+                                0,
+                                0
+                            ).split(",")
+                            hour = newHour.toInt()
+                            minute = newMinute.toInt()
+                            second = newSecond.toInt()
+                            printTimeConcisely(hour, minute, second)
+                            println()
+                            print("Time$inputNumber: ")
+                            element = getInput()
+                            continue
+                        }
+                        else if (element=="redo"){
+                            println()
+                            continue@entireProgram
+                        }
+                        else if (element=="main") {
+                            println()
+                            throw RedoMainException()
+                        }
+                        else if (element == "excel"){
+                            println("Paste a list of times you would like to add, with each time on a new line. There is no way to enter a new line on the console so you must copy a list already separated by new lines and paste it into the console")
+                            val stdin = Scanner(BufferedInputStream(System.`in`))
+                            while (stdin.hasNext()) {
+                                answer+=stdin.next()
+                            }
+                        }
+                    }
+                }

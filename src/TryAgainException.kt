@@ -1,0 +1,3 @@
+class TryAgainException : Throwable() {
+
+}

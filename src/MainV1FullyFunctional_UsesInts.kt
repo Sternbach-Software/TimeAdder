@@ -18,23 +18,20 @@ object MainV1FullyFunctional_UsesInts {
 
 
 
+    //TODO make TimeAdder GUI
+        //TODO add MainScreen GUI with radio buttons for each mode
+        //TODO add adder gui
+        //TODO add start and end time gui with one slot for each
+        //TODO add a constantly updating total every time you enter a value
+        //TODO the time adder should have the ability to add a time by pressing enter so you dont have to take your hands off the keyboard
+        //TODO add big text editor pane which you could paste (e.g. from Excel) a list of properly formatted times(using .split("\n")  )
 
-    //TODO add MainScreen GUI with radio buttons for each mode
-    //TODO add adder gui
-    //TODO add start and end time gui with one slot for each
-    //TODO add a constantly updating total every time you enter a value
-    //TODO the time adder should have the ability to add a time by pressing enter so you dont have to take your hands off the keyboard
-    //TODO add big text editor pane which you could paste (e.g. from Excel) a list of properly formatted times(using .split("\n")  )
-    //TODO add "excel" to input list of times to add
     //TODO checklist for addition of "excel" feature
 
         //TODO should accommodate the possibility of one of the times/lines ending in a space(i.e. trim() )
-        //TODO add "excel" to timeAdd()
         //TODO add "excel" to startEnd()
             //TODO add error message in case one of the files has a time which doesnt have a counterpart, e.g. there is a time in the start times file which does not have a counterpart in the end times file
-        //TODO add "excel" to timeAddMulti()
         //TODO add ability to exit out of excel mode before entering the filepath in case the user cannot get the filepath function working or correctly grant access to the file in case it is locked
-        //TODO trim() all inputs so that something like "8:23 AM " (notice the space) will not throw the system off
 
     var shouldIFinish=false//for some reason, when timeAddMulti would finish and go to main menu, it would loop asking the user which mode they wanted, so I introcuced a check before when(getInput()) to this variable to stop the loop if i came from Multi where I set this to true
     @Throws(ParseException::class)
@@ -252,7 +249,7 @@ object MainV1FullyFunctional_UsesInts {
                         println()
                         throw RedoMainException()
                     } else if (input == "excel") {
-                        println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line. To see an example file, type \"example\".")
+                        println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line. To see an example file, type \"example\". To resume regular mode without entering a file path, enter \"resume\".")
                         var file: File
                         getExcelInput@ while (true) {
                             getFilePath@ while (true) {
@@ -262,10 +259,16 @@ object MainV1FullyFunctional_UsesInts {
                                         if (File(pathname).exists()) File(pathname)
                                         else if (pathname.toLowerCase() == "example") {
                                             createAddTimeExampleFileAndOpenFile()
-                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line: ")
+                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line. To resume regular mode without entering a file path, enter \"resume\" or \"back\": ")
                                             continue@getFilePath
-                                        } else {
-                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
+                                        }
+                                        else if(pathname.toLowerCase() == "resume"|| pathname.toLowerCase() == "back") {
+                                            print("Time$inputNumber: ")
+                                            input = getInput()
+                                            continue@mainInputs
+                                        }
+                                        else {
+                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again. To resume regular mode without entering a file path, enter \"resume\" or \"back\": ")
                                             continue@getFilePath
                                         }
                                     } catch (e: SecurityException) {
@@ -511,10 +514,14 @@ object MainV1FullyFunctional_UsesInts {
                                         if (File(pathname).exists()) File(pathname)
                                         else if (pathname.toLowerCase() == "example") {
                                             createAddTimeMultiExampleFileAndOpenFile()
-                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line: ")
+                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line. To resume regular mode without entering a file path, enter \"resume\" or \"back\": ")
                                             continue@getFilePath
+                                        } else if(pathname.toLowerCase() == "resume"|| pathname.toLowerCase() == "back") {
+                                                print("Time$inputNumber: ")
+                                                input = getInput()
+                                                continue@mainInputs
                                         } else {
-                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
+                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again. To resume regular mode without entering a file path, enter \"resume\" or \"back\": ")
                                             continue@getFilePath
                                         }
                                     } catch (e: SecurityException) {

@@ -42,44 +42,49 @@ object MainV1FullyFunctional_UsesInts {
     @Throws(ParseException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        var placeHolder=true
-        mainMenu@while(placeHolder) {
+        var placeHolder = true
+        mainMenu@ while (placeHolder) {
             try {
                 println("Would you like to use the Second Mode(1), Minute Mode(2), Minute/Second Mode(3), Hour/Minute Mode(4),\nHour/Minute/Second Mode(5), Multi Mode(6), or Start/End Mode(7)? Once started, type \"done\" to see the final result and exit, \"total\" to see the current total, \"redo\" to reset the running total to 0 and restart the current mode from Time1, \"excel\" to enter a list of times to add (or for Start/End Mode, start times and end times to add together,) or \"main\" to go back to the main menu(doing so will reset the running total to 0 without first displaying the running total):")
-                when (getInput()) {
-                    "1" -> timeAdd(
-                        ss,
-                        1,
-                        "Enter numbers in the following format: \"116\" (i.e. 16 sec) or \"-116\" to add or subtract 116 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
-                    )
-                    "2" -> timeAdd(
-                        mm,
-                        2,
-                        "Enter numbers in the following format: \"222\" (i.e. 222 min) or \"-222\" to add or subtract 222 minutes from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
-                    )
-                    "3" -> timeAdd(
-                        mmCss,
-                        3,
-                        "Enter numbers in the following format: \"222:16\" (i.e. 222 min 16 sec) or \"222:-16\", etc. to add 222 minutes and add/subtract 16 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
-                    )
-                    "4" -> timeAdd(
-                        hhCmm,
-                        4,
-                        "Enter numbers in the following format: \"115:22\" (i.e. 115 hr 22 min) or \"115:-22\", etc. to add 115 hours and add/subtract 22 minutes from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
-                    )
-                    "5" -> timeAdd(
-                        hhCmmCss,
-                        5,
-                        "Enter numbers in the following format: \"115:22:116\" (i.e. 115 hr 22 min 116 sec) or \"-115:22:-116\", etc. to add/subtract 115 hours, add 22 minutes, and add/subtract 116 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
-                    )
-                    "6" -> timeAddMulti()
-                    "7" -> startEndMode()
+                requestInput@ while (true) {
+                    when (getInput()) {
+                        "1" -> timeAdd(
+                            ss,
+                            1,
+                            "Enter numbers in the following format: \"116\" (i.e. 16 sec) or \"-116\" to add or subtract 116 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
+                        )
+                        "2" -> timeAdd(
+                            mm,
+                            2,
+                            "Enter numbers in the following format: \"222\" (i.e. 222 min) or \"-222\" to add or subtract 222 minutes from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
+                        )
+                        "3" -> timeAdd(
+                            mmCss,
+                            3,
+                            "Enter numbers in the following format: \"222:16\" (i.e. 222 min 16 sec) or \"222:-16\", etc. to add 222 minutes and add/subtract 16 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
+                        )
+                        "4" -> timeAdd(
+                            hhCmm,
+                            4,
+                            "Enter numbers in the following format: \"115:22\" (i.e. 115 hr 22 min) or \"115:-22\", etc. to add 115 hours and add/subtract 22 minutes from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
+                        )
+                        "5" -> timeAdd(
+                            hhCmmCss,
+                            5,
+                            "Enter numbers in the following format: \"115:22:116\" (i.e. 115 hr 22 min 116 sec) or \"-115:22:-116\", etc. to add/subtract 115 hours, add 22 minutes, and add/subtract 116 seconds from the total, respectively. The maximum computable, cumulative time is 596523 hours, 14 minutes, 7 seconds."
+                        )
+                        "6" -> timeAddMulti()
+                        "7" -> startEndMode()
+                        else-> {
+                            println("Invalid Input. Please Try Again.")
+                            continue@requestInput
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 if (e is RedoMainException) {
                     continue@mainMenu
-                }
-                else e.printStackTrace()
+                } else e.printStackTrace()
             }
             placeHolder = false
         }

@@ -1,9 +1,6 @@
 
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileNotFoundException
 import java.text.ParseException
-import java.util.*
 import java.util.regex.Pattern
 
 object MainV1FullyFunctional_UsesInts {
@@ -28,16 +25,17 @@ object MainV1FullyFunctional_UsesInts {
     //TODO add a constantly updating total every time you enter a value
     //TODO the time adder should have the ability to add a time by pressing enter so you dont have to take your hands off the keyboard
     //TODO add big text editor pane which you could paste (e.g. from Excel) a list of properly formatted times(using .split("\n")  )
-    //TODO add "main" option to go to main menu
     //TODO add "excel" to input list of times to add
     //TODO checklist for addition of "excel" feature
 
         //TODO should accommodate the possibility of one of the times/lines ending in a space(i.e. trim() )
         //TODO add "excel" to timeAdd()
         //TODO add "excel" to startEnd()
+            //TODO add error message in case one of the files has a time which doesnt have a counterpart, e.g. there is a time in the start times file which does not have a counterpart in the end times file
         //TODO add "excel" to timeAddMulti()
         //TODO add ability to exit out of excel mode before entering the filepath in case the user cannot get the filepath function working or correctly grant access to the file in case it is locked
-        //TODO implement all three versions of createAddTimeExampleFileAndOpenFile()
+        //TODO trim() all inputs so that something like "8:23 AM " (notice the space) will not throw the system off
+
 
     @Throws(ParseException::class)
     @JvmStatic
@@ -263,7 +261,7 @@ object MainV1FullyFunctional_UsesInts {
                                         if (File(pathname).exists()) File(pathname)
                                         else if (pathname.toLowerCase() == "example") {
                                             createAddTimeExampleFileAndOpenFile()
-                                            println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line: ")
+                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line: ")
                                             continue@getFilePath
                                         } else {
                                             print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
@@ -277,11 +275,11 @@ object MainV1FullyFunctional_UsesInts {
                                 break@getFilePath
                             }
                             val times = file.readLines()
-                            val intListOf_Hour_Minute_And_Second_TotalFromFile =
+                            val listofHourMinuteAndSecondTotalfromfile =
                                 parseExcelTimes(times, regex, mode) ?: continue@getExcelInput
-                            hour += intListOf_Hour_Minute_And_Second_TotalFromFile[0]
-                            minute += intListOf_Hour_Minute_And_Second_TotalFromFile[1]
-                            second += intListOf_Hour_Minute_And_Second_TotalFromFile[2]
+                            hour += listofHourMinuteAndSecondTotalfromfile[0]
+                            minute += listofHourMinuteAndSecondTotalfromfile[1]
+                            second += listofHourMinuteAndSecondTotalfromfile[2]
                             println("Would you like to resume adding times using regular mode, starting with Time$inputNumber, or continue using excel mode? Enter \"resume\" to resume counting with regular mode, or \"excel\" to continue entering file paths in the aforementioned format: ")
                             getAnswer@while(true) {
                                 val answer = getInput()
@@ -318,13 +316,41 @@ object MainV1FullyFunctional_UsesInts {
     }
 
     fun createAddTimeExampleFileAndOpenFile() {
-        TODO("Create text file in the same directory as jar, write properly formatted times to it, and open the file for the user to see")
+
+        val batchFile = File(System.getProperty("user.dir")+"\\OpenAddTimeExample.bat")
+        batchFile.writeText("notepad \'"+ System.getProperty("user.dir")+"\\OpenAddTimeExample\'")
+        val textFile=File(System.getProperty("user.dir")+"\\OpenAddTimeExample.txt")
+        textFile.writeText("15\n45\n162\n-115\n89\n6")//Create example file
+
+        val run = Runtime.getRuntime()
+        run.exec(batchFile.absolutePath)
+        Thread.sleep(2000L)
+        textFile.delete()
+        batchFile.delete()
     }
     fun createAddTimeMultiExampleFileAndOpenFile() {
-        TODO("Create text file in the same directory as jar, write properly formatted times to it, and open the file for the user to see")
+        val batchFile = File(System.getProperty("user.dir")+"\\OpenAddMultiTimeExample.bat")
+        batchFile.writeText("notepad \'"+ System.getProperty("user.dir")+"\\OpenAddMultiTimeExample\'")
+        val textFile=File(System.getProperty("user.dir")+"\\OpenAddMultiTimeExample.txt")
+        textFile.writeText("s15\nm45:-10\n-162:23:-18\nm-115\nh1:2\nh6\nm2:3")//Create example file
+
+        val run = Runtime.getRuntime()
+        run.exec(batchFile.absolutePath)
+        Thread.sleep(2000L)
+        textFile.delete()
+        batchFile.delete()
     }
     fun createStartEndTimeExampleFileAndOpenFile() {
-        TODO("Create text file in the same directory as jar, write properly formatted times to it, and open the file for the user to see")
+        val batchFile = File(System.getProperty("user.dir")+"\\OpenStartEndTimeExample.bat")
+        batchFile.writeText("notepad \'"+ System.getProperty("user.dir")+"\\OpenStartEndTimeExample\'")
+        val textFile=File(System.getProperty("user.dir")+"\\OpenStartEndTimeExample.txt")
+        textFile.writeText("12:42 pm\n9:16:45 AM\n8:23 am\n5:48:27 PM\n11:15 AM\n9:21 am\n8:16:21 Am\n9:28:15 pM\n9:28:15 Pm")//Create example file
+
+        val run = Runtime.getRuntime()
+        run.exec(batchFile.absolutePath)
+        Thread.sleep(2000L)
+        textFile.delete()
+        batchFile.delete()
     }
     fun toSeconds(hour1: Int, minute1: Int, second1: Int) =  (hour1 * 3600) + (minute1 * 60) + second1
     fun toHrMinSec(hour: Int = 0, minute: Int = 0, second: Int = 0): Triple<Int, Int, Int> {
@@ -848,7 +874,7 @@ object MainV1FullyFunctional_UsesInts {
                     second = newSecond.toInt()
                 }
             } else {
-                println("The value \"$time1\" at position ${times.indexOf(time1)+1} was incorrectly formatted. Please correct the value and enter the file path again: ")
+                println("The value \"$time1\" at position ${times.indexOf(time1)+1} was incorrectly formatted. Please correct the value and enter the file path again (to see an example file enter \"example\"): ")
                 return null
             }
             val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(

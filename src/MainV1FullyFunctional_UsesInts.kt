@@ -76,7 +76,7 @@ object MainV1FullyFunctional_UsesInts {
                         "6" -> timeAddMulti()
                         "7" -> startEndMode()
                         else-> {
-                            println("Invalid Input. Please Try Again.")
+                            print("Invalid Input. Please Try Again: ")
                             continue@requestInput
                         }
                     }
@@ -107,7 +107,7 @@ object MainV1FullyFunctional_UsesInts {
             var input = getInput()
 
             //Collect input times:
-            while (true) {
+            mainInputs@while (true) {
                 if (Pattern.matches(regex, input)) {
                     //tree of destructuring decision based on time format:
                     if (regex == hhCmmCss) { //if in hh:mm:ss format
@@ -266,11 +266,11 @@ object MainV1FullyFunctional_UsesInts {
                                             println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line: ")
                                             continue@getFilePath
                                         } else {
-                                            println("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
+                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
                                             continue@getFilePath
                                         }
                                     } catch (e: SecurityException) {
-                                        println("File access denied. Please either run this program as Administrator or grant read access to the user who ran this program. Once done, please enter the file path again to continue with the calculations: ")
+                                        print("File access denied. Please either run this program as Administrator or grant read access to the user who ran this program. Once done, please enter the file path again to continue with the calculations: ")
                                         continue@getFilePath
                                     }
                                 file = filename
@@ -285,7 +285,11 @@ object MainV1FullyFunctional_UsesInts {
                             println("Would you like to resume adding times using regular mode, starting with Time$inputNumber, or continue using excel mode? Enter \"resume\" to resume counting with regular mode, or \"excel\" to continue entering file paths in the aforementioned format: ")
                             getAnswer@while(true) {
                                 val answer = getInput()
-                                if (answer == "resume") break@getExcelInput
+                                if (answer == "resume") {
+                                    print("Time$inputNumber: ")
+                                    input = getInput()
+                                    continue@mainInputs
+                                }
                                 else if (answer == "excel") {
                                     println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line. To see an example file, type \"example\".")
                                     continue@getExcelInput

@@ -36,7 +36,7 @@ object MainV1FullyFunctional_UsesInts {
         //TODO add ability to exit out of excel mode before entering the filepath in case the user cannot get the filepath function working or correctly grant access to the file in case it is locked
         //TODO trim() all inputs so that something like "8:23 AM " (notice the space) will not throw the system off
 
-
+    var shouldIFinish=false//for some reason, when timeAddMulti would finish and go to main menu, it would loop asking the user which mode they wanted, so I introcuced a check before when(getInput()) to this variable to stop the loop if i came from Multi where I set this to true
     @Throws(ParseException::class)
     @JvmStatic
     fun main(args: Array<String>) {
@@ -45,6 +45,7 @@ object MainV1FullyFunctional_UsesInts {
             try {
                 println("Would you like to use the Second Mode(1), Minute Mode(2), Minute/Second Mode(3), Hour/Minute Mode(4),\nHour/Minute/Second Mode(5), Multi Mode(6), or Start/End Mode(7)? Once started, type \"done\" to see the final result and exit, \"total\" to see the current total, \"redo\" to reset the running total to 0 and restart the current mode from Time1, \"excel\" to enter a list of times to add (or for Start/End Mode, start times and end times to add together,) or \"main\" to go back to the main menu(doing so will reset the running total to 0 without first displaying the running total):")
                 requestInput@ while (true) {
+                    if(shouldIFinish) break@mainMenu
                     when (getInput()) {
                         "1" -> timeAdd(
                             ss,
@@ -314,7 +315,6 @@ object MainV1FullyFunctional_UsesInts {
             placeHolder1=false
         }
     }
-
     fun createAddTimeExampleFileAndOpenFile() {
 
         val batchFile = File(System.getProperty("user.dir")+"\\OpenAddTimeExample.bat")
@@ -380,7 +380,7 @@ object MainV1FullyFunctional_UsesInts {
             var minute = 0
             var second = 0
             //Collect input times:
-            while (true) {
+            mainInputs@while (true) {
                 if (Pattern.matches(hhCmmCss, input)) { //such as
                     val times = input.split(":".toRegex()).toTypedArray()
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
@@ -394,7 +394,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (Pattern.matches(hhhCmm, input)) { //if in h:mm format
+                }
+                else if (Pattern.matches(hhhCmm, input)) { //if in h:mm format
                     input = input.substring(1)
                     val times = input.split(":".toRegex()).toTypedArray()
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
@@ -408,7 +409,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (Pattern.matches(mmmCss, input)) { //if in mmm(e.g. m42) format
+                }
+                else if (Pattern.matches(mmmCss, input)) { //if in mmm(e.g. m42) format
                     input = input.substring(1)
                     val times = input.split(":".toRegex()).toTypedArray()
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
@@ -422,7 +424,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (Pattern.matches(mmm, input)) { //if in mmm(e.g. m42) format
+                }
+                else if (Pattern.matches(mmm, input)) { //if in mmm(e.g. m42) format
                     input = input.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -435,7 +438,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (Pattern.matches(hhh, input)) {
+                }
+                else if (Pattern.matches(hhh, input)) {
                     input = input.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -448,7 +452,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (Pattern.matches(sss, input)) { //if in sss(e.g. s42) format
+                }
+                else if (Pattern.matches(sss, input)) { //if in sss(e.g. s42) format
                     input = input.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -461,13 +466,14 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else {
+                }
+                else {
                     if (!(input == "total" || input == "done" || input == "redo" || input == "main" || input == "excel")) {
                         println("Incorrectly Formatted Number. Try Again.")
                         print("Time$inputNumber: ")
                         input = getInput()
                         continue
-                    } else if (input == "done") break
+                    } else if (input == "done") {shouldIFinish=true;break}
                     else if (input == "total") {
                         val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                             hour,
@@ -495,7 +501,51 @@ object MainV1FullyFunctional_UsesInts {
                         throw RedoMainException()
                     }
                     else if (input=="excel") {
-                        TODO("Unimplemented")
+                        println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line. To see an example file, type \"example\".")
+                        var file: File
+                        getExcelInput@ while (true) {
+                            getFilePath@ while (true) {
+                                val filename =
+                                    try {
+                                        val pathname = readLine() ?: ""
+                                        if (File(pathname).exists()) File(pathname)
+                                        else if (pathname.toLowerCase() == "example") {
+                                            createAddTimeMultiExampleFileAndOpenFile()
+                                            println("Enter the file path to a .txt file which contains all of the times you would like to add, with each time on a new line: ")
+                                            continue@getFilePath
+                                        } else {
+                                            print("Invalid input. Either the file was not found or the command you entered is not recognized. Please try again: ")
+                                            continue@getFilePath
+                                        }
+                                    } catch (e: SecurityException) {
+                                        print("File access denied. Please either run this program as Administrator or grant read access to the user who ran this program. Once done, please enter the file path again to continue with the calculations: ")
+                                        continue@getFilePath
+                                    }
+                                file = filename
+                                break@getFilePath
+                            }
+                            val times = file.readLines()
+                            val listofHourMinuteAndSecondTotalfromfile = parseExcelTimesMulti(times) ?: continue@getExcelInput
+                            hour += listofHourMinuteAndSecondTotalfromfile[0]
+                            minute += listofHourMinuteAndSecondTotalfromfile[1]
+                            second += listofHourMinuteAndSecondTotalfromfile[2]
+                            println("Would you like to resume adding times using regular mode, starting with Time$inputNumber, or continue using excel mode? Enter \"resume\" to resume counting with regular mode, or \"excel\" to continue entering file paths in the aforementioned format: ")
+                            getAnswer@while(true) {
+                                val answer = getInput()
+                                if (answer == "resume") {
+                                    print("Time$inputNumber: ")
+                                    input = getInput()
+                                    continue@mainInputs
+                                }
+                                else if (answer == "excel") {
+                                    println("Enter the file path to a .txt file with all of the times you would like to add with each time on a new line. To see an example file, type \"example\".")
+                                    continue@getExcelInput
+                                } else {
+                                    print("Invalid input. Please try again: ")
+                                    continue@getAnswer
+                                }
+                            }
+                        }
                     }
                 }
                 inputNumber += 1
@@ -514,6 +564,121 @@ object MainV1FullyFunctional_UsesInts {
             placeHolder2=false
         }
     }
+
+    fun parseExcelTimesMulti(times: List<String>): List<Int>? {
+        var hour = 0
+        var minute = 0
+        var second = 0
+        for (time1 in times) {
+            var time = time1
+            if (Pattern.matches(hhCmmCss, time)) { //such as
+                val times = time.split(":".toRegex()).toTypedArray()
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    times[0].toInt(),
+                    times[1].toInt(),
+                    times[2].toInt()
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else if (Pattern.matches(hhhCmm, time)) { //if in h:mm format
+                time = time.substring(1)
+                val times = time.split(":".toRegex()).toTypedArray()
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    times[0].toInt(),
+                    times[1].toInt(),
+                    0
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else if (Pattern.matches(mmmCss, time)) { //if in mmm(e.g. m42) format
+                time = time.substring(1)
+                val times = time.split(":".toRegex()).toTypedArray()
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    0,
+                    times[0].toInt(),
+                    times[1].toInt()
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else if (Pattern.matches(mmm, time)) { //if in mmm(e.g. m42) format
+                time = time.substring(1)
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    0,
+                    time.toInt(),
+                    0
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else if (Pattern.matches(hhh, time)) {
+                time = time.substring(1)
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    time.toInt(),
+                    0,
+                    0
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else if (Pattern.matches(sss, time)) { //if in sss(e.g. s42) format
+                time = time.substring(1)
+                val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                    hour,
+                    minute,
+                    second,
+                    0,
+                    0,
+                    time.toInt()
+                ).split(",")
+                hour = newHour.toInt()
+                minute = newMinute.toInt()
+                second = newSecond.toInt()
+            }
+            else {
+                println("The value \"$time1\" at position ${times.indexOf(time1)+1} was incorrectly formatted. Please correct the value and enter the file path again (to see an example file enter \"example\"): ")
+                return null
+            }
+            val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
+                hour,
+                minute,
+                second,
+                0,
+                0,
+                0
+            ).split(",")
+            hour = newHour.toInt()
+            minute = newMinute.toInt()
+            second = newSecond.toInt()
+        }
+        printTimeConcisely(hour,minute,second)
+        println(" added to total")
+        return listOf(hour, minute, second)
+    }
+
+
     fun printTimeConcisely(hour: Int, minute: Int, second: Int) {
         when {
             (second == 0) and (hour > 0) and (minute == 0) -> print("$hour hr")
@@ -760,7 +925,7 @@ object MainV1FullyFunctional_UsesInts {
         }
     }
     class RedoMainException : Exception()
-    fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List<Int>? {
+    fun parseExcelTimes(times: List<String>, regex: String, mode: Int = 0): List<Int>? {
         var hour = 0
         var minute = 0
         var second = 0
@@ -781,7 +946,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == hhCmm && mode == 4) { //if in h:mm format
+                }
+                else if (regex == hhCmm && mode == 4) { //if in h:mm format
                     //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds. I am assuming it is 0
                     val times = time.split(":".toRegex()).toTypedArray()
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
@@ -795,7 +961,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == mmCss && mode == 3) { //if in mm:ss format
+                }
+                else if (regex == mmCss && mode == 3) { //if in mm:ss format
                     val times = time.split(":".toRegex()).toTypedArray()
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -808,7 +975,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == mmm) { //if in mmm(e.g. m42) format
+                }
+                else if (regex == mmm) { //if in mmm(e.g. m42) format
                     //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds
                     time = time.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
@@ -822,7 +990,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == hhh) {
+                }
+                else if (regex == hhh) {
                     time = time.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -835,7 +1004,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == sss) {
+                }
+                else if (regex == sss) {
                     time = time.substring(1)
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
@@ -848,7 +1018,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == mm && mode == 2) {
+                }
+                else if (regex == mm && mode == 2) {
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
                         minute,
@@ -860,7 +1031,8 @@ object MainV1FullyFunctional_UsesInts {
                     hour = newHour.toInt()
                     minute = newMinute.toInt()
                     second = newSecond.toInt()
-                } else if (regex == ss && mode == 1) {
+                }
+                else if (regex == ss && mode == 1) {
                     val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
                         hour,
                         minute,

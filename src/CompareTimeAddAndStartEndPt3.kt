@@ -1,10 +1,10 @@
 import java.util.regex.Pattern
-import MainV1FullyFunctional_UsesInts.hhCmmCssAMPM
-import MainV1FullyFunctional_UsesInts.to24HourFormat
-import MainV1FullyFunctional_UsesInts.toSeconds
-import MainV1FullyFunctional_UsesInts.toHrMinSec
-import MainV1FullyFunctional_UsesInts.getInput
-import MainV1FullyFunctional_UsesInts.printTimeConcisely
+import MainCleanedUp.hhCmmCssAMPM
+import MainCleanedUp.to24HourFormat
+import MainCleanedUp.toSeconds
+import MainCleanedUp.toHrMinSec
+import MainCleanedUp.getInput
+import MainCleanedUp.printTimeConcisely
 import java.lang.Integer.parseInt
 
 
@@ -67,7 +67,7 @@ fun startEndMode() {
             print("Enter Time $i$ab:")
             time1 = getInput()
             while (time1 == "total") {
-                printTimeConcisely(hoursElapsedBetweenTimes, minutesElapsedBetweenTimes, secondsElapsedBetweenTimes)
+                printTimeConcisely()
                 println()
                 print("Enter Time $i$ab:")
                 time1 = getInput()
@@ -82,7 +82,7 @@ fun startEndMode() {
             println("Enter Time $i$ab:")
             time2 = getInput()
             while (time2 == "total") {
-                printTimeConcisely(hoursElapsedBetweenTimes, minutesElapsedBetweenTimes, secondsElapsedBetweenTimes)
+                printTimeConcisely()
                 println()
                 print("Enter Time $i$ab:")
                 time2 = getInput()

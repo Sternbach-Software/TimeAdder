@@ -1,12 +1,12 @@
-import MainV1FullyFunctional_UsesInts.formatAddAndReformatTimes
-import MainV1FullyFunctional_UsesInts.hhCmm
-import MainV1FullyFunctional_UsesInts.hhCmmCss
-import MainV1FullyFunctional_UsesInts.hhh
-import MainV1FullyFunctional_UsesInts.mm
-import MainV1FullyFunctional_UsesInts.mmCss
-import MainV1FullyFunctional_UsesInts.mmm
-import MainV1FullyFunctional_UsesInts.ss
-import MainV1FullyFunctional_UsesInts.sss
+import MainCleanedUp.formatAddAndReformatTimes
+import MainCleanedUp.hhCmm
+import MainCleanedUp.hhCmmCss
+import MainCleanedUp.hhh
+import MainCleanedUp.mm
+import MainCleanedUp.mmCss
+import MainCleanedUp.mmm
+import MainCleanedUp.ss
+import MainCleanedUp.sss
 import java.util.regex.Pattern
 
 fun main() {
@@ -23,13 +23,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
             if (regex == hhCmmCss) { //if in hh:mm:ss format
                 val times = time.split(":".toRegex()).toTypedArray()
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     times[0].toInt(),
                     times[1].toInt(),
                     times[2].toInt()
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -38,13 +35,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
                 //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds. I am assuming it is 0
                 val times = time.split(":".toRegex()).toTypedArray()
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     times[0].toInt(),
                     times[1].toInt(),
                     0
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -52,13 +46,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
             else if (regex == mmCss && mode == 3) { //if in mm:ss format
                 val times = time.split(":".toRegex()).toTypedArray()
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     0,
                     times[0].toInt(),
                     times[1].toInt()
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -67,13 +58,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
                 //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds
                 time = time.substring(1)
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     0,
                     time.toInt(),
                     0
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -81,13 +69,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
             else if (regex == hhh) {
                 time = time.substring(1)
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     time.toInt(),
                     0,
                     0
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -95,39 +80,30 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
             else if (regex == sss) {
                 time = time.substring(1)
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     0,
                     0,
                     time.toInt()
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
             }
             else if (regex == mm && mode == 2) {
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     0,
                     time.toInt(),
                     0
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
             }
             else if (regex == ss && mode == 1) {
                 val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-                    hour,
-                    minute,
-                    second,
                     0,
                     0,
                     time.toInt()
-                ).split(",")
+                )
                 hour = newHour.toInt()
                 minute = newMinute.toInt()
                 second = newSecond.toInt()
@@ -137,13 +113,10 @@ private fun parseExcelTimes(times: List<String>, regex: String, mode: Int): List
             return null
         }
         val (newHour, newMinute, newSecond) = formatAddAndReformatTimes(
-            hour,
-            minute,
-            second,
             0,
             0,
             0
-        ).split(",")
+        )
         hour = newHour.toInt()
         minute = newMinute.toInt()
         second = newSecond.toInt()

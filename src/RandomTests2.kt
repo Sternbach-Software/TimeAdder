@@ -1,8 +1,8 @@
 import javax.swing.*
 
 fun main() {
-    val(time1, time2)=getTwoInputs().split(",")
-    println("$time1 to $time2")
+//    val(time1, time2)=getTwoInputs()
+//    println("$time1 to $time2")
 }
 private fun getTwoInputs(): String {
     val xField = JTextField(5);

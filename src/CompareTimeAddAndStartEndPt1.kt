@@ -1,15 +1,15 @@
-import MainV1FullyFunctional_UsesInts.mmCss
-import MainV1FullyFunctional_UsesInts.hhh
-import MainV1FullyFunctional_UsesInts.mm
-import MainV1FullyFunctional_UsesInts.ss
-import MainV1FullyFunctional_UsesInts.printTimeConcisely
-import MainV1FullyFunctional_UsesInts.toHrMinSec
-import MainV1FullyFunctional_UsesInts.mmm
-import MainV1FullyFunctional_UsesInts.sss
-import MainV1FullyFunctional_UsesInts.hhCmm
-import MainV1FullyFunctional_UsesInts.hhCmmCss
-import MainV1FullyFunctional_UsesInts.getInput
-import MainV1FullyFunctional_UsesInts.formatAddAndReformatTimes
+import MainCleanedUp.mmCss
+import MainCleanedUp.hhh
+import MainCleanedUp.mm
+import MainCleanedUp.ss
+import MainCleanedUp.printTimeConcisely
+import MainCleanedUp.toHrMinSec
+import MainCleanedUp.mmm
+import MainCleanedUp.sss
+import MainCleanedUp.hhCmm
+import MainCleanedUp.hhCmmCss
+import MainCleanedUp.getInput
+import MainCleanedUp.formatAddAndReformatTimes
 import java.util.regex.Pattern
 
 private fun timeAdd(regex: String, mode: Int, message: String) {
@@ -30,7 +30,11 @@ private fun timeAdd(regex: String, mode: Int, message: String) {
             //tree of destructuring decision base on time format:
             if (regex == hhCmmCss) { //if in hh:mm:ss format
                 val times = input.split(":".toRegex()).toTypedArray()
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,times[0].toInt(), times[1].toInt(), times[2].toInt()).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                    times[0].toInt(),
+                    times[1].toInt(),
+                    times[2].toInt()
+                )
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
@@ -38,14 +42,22 @@ private fun timeAdd(regex: String, mode: Int, message: String) {
             else if (regex == hhCmm && mode == 4) { //if in h:mm format
                 //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds. I am assuming it is 0
                 val times = input.split(":".toRegex()).toTypedArray()
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,times[0].toInt(), times[1].toInt(), 0).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                    times[0].toInt(),
+                    times[1].toInt(),
+                    0
+                )
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
             }
             else if (regex == mmCss && mode == 3) { //if in mm:ss format
                 val times = input.split(":".toRegex()).toTypedArray()
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second, 0, times[0].toInt(), times[1].toInt()).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                    0,
+                    times[0].toInt(),
+                    times[1].toInt()
+                )
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
@@ -53,33 +65,33 @@ private fun timeAdd(regex: String, mode: Int, message: String) {
             else if (regex == mmm) { //if in mmm(e.g. m42) format
                 //TODO This code will not work if the user inputs a decimal value for minutes. Because, 4.5 minutes is 4 min 30 sec, and i do not update the value for seconds
                 input = input.substring(1)
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, input.toInt(), 0).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, input.toInt(), 0)
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
             }
             else if (regex == hhh) {
                 input = input.substring(1)
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,input.toInt(), 0, 0).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(input.toInt(), 0, 0)
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
             }
             else if (regex == sss) {
                 input = input.substring(1)
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, 0, input.toInt()).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, 0, input.toInt())
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
             }
             else if (regex == mm && mode == 2) {
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, input.toInt(), 0).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, input.toInt(), 0)
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
             }
             else if (regex == ss && mode == 1) {
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, 0, input.toInt()).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, 0, input.toInt())
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
@@ -98,7 +110,7 @@ private fun timeAdd(regex: String, mode: Int, message: String) {
                 hour=formattedTime.first
                 minute=formattedTime.second
                 second=formattedTime.third
-                printTimeConcisely(hour, minute, second)
+                printTimeConcisely()
                 println()
                 print("Time$inputNumber: ")
                 input = getInput()
@@ -114,6 +126,6 @@ private fun timeAdd(regex: String, mode: Int, message: String) {
     hour = triple.first
     minute = triple.second
     second = triple.third
-    printTimeConcisely(hour, minute, second)
+    printTimeConcisely()
     println()
 }

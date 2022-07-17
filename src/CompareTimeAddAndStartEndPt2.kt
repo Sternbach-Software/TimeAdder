@@ -1,12 +1,8 @@
 import Main.*
-import MainV1FullyFunctional_UsesInts.formatAddAndReformatTimes
+import MainCleanedUp.formatAddAndReformatTimes
 import java.util.regex.Pattern
-import MainV1FullyFunctional_UsesInts.hhCmmCssAMPM
-import MainV1FullyFunctional_UsesInts.to24HourFormat
-import MainV1FullyFunctional_UsesInts.toSeconds
-import MainV1FullyFunctional_UsesInts.toHrMinSec
-import MainV1FullyFunctional_UsesInts.getInput
-import MainV1FullyFunctional_UsesInts.printTimeConcisely
+import MainCleanedUp.getInput
+import MainCleanedUp.printTimeConcisely
 
 
 fun main() {
@@ -25,7 +21,11 @@ fun timeAddMulti() {
     while (true) {
         if (Pattern.matches(hhCmmCss, input)) { //such as
             val times = input.split(":".toRegex()).toTypedArray()
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,times[0].toInt(), times[1].toInt(), times[2].toInt()).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                times[0].toInt(),
+                times[1].toInt(),
+                times[2].toInt()
+            )
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
@@ -33,7 +33,11 @@ fun timeAddMulti() {
         else if (Pattern.matches(hhhCmm, input)) { //if in h:mm format
             input = input.substring(1)
             val times = input.split(":".toRegex()).toTypedArray()
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,times[0].toInt(), times[1].toInt(), 0).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                times[0].toInt(),
+                times[1].toInt(),
+                0
+            )
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
@@ -41,28 +45,32 @@ fun timeAddMulti() {
         else if (Pattern.matches(mmmCss, input)) { //if in mmm(e.g. m42) format
             input = input.substring(1)
             val times = input.split(":".toRegex()).toTypedArray()
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second, 0, times[0].toInt(), times[1].toInt()).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(
+                0,
+                times[0].toInt(),
+                times[1].toInt()
+            )
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
         }
         else if (Pattern.matches(mmm, input)) { //if in mmm(e.g. m42) format
             input = input.substring(1)
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, input.toInt(), 0).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, input.toInt(), 0)
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
         }
         else if (Pattern.matches(hhh, input)) {
             input = input.substring(1)
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,input.toInt(), 0, 0).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(input.toInt(), 0, 0)
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
         }
         else if (Pattern.matches(sss, input)) { //if in sss(e.g. s42) format
             input = input.substring(1)
-            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, 0, input.toInt()).split(",")
+            val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, 0, input.toInt())
             hour=newHour.toInt()
             minute=newMinute.toInt()
             second=newSecond.toInt()
@@ -76,11 +84,11 @@ fun timeAddMulti() {
             }
             else if (input == "done") break
             else if (input == "total") {
-                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, 0, 0).split(",")
+                val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, 0, 0)
                 hour=newHour.toInt()
                 minute=newMinute.toInt()
                 second=newSecond.toInt()
-                printTimeConcisely(hour, minute, second)
+                printTimeConcisely()
                 println()
                 print("Time$inputNumber: ")
                 input = getInput()
@@ -92,11 +100,11 @@ fun timeAddMulti() {
         input = getInput()
     }
     println()
-    val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(hour,minute,second,0, 0, 0).split(",")
+    val (newHour,newMinute,newSecond)= formatAddAndReformatTimes(0, 0, 0)
     hour=newHour.toInt()
     minute=newMinute.toInt()
     second=newSecond.toInt()
 
-    printTimeConcisely(hour, minute, second)
+    printTimeConcisely()
     println()
 }
